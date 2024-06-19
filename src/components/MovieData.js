@@ -3,10 +3,11 @@ import axios from 'axios';
 import InfiniteScroll from 'react-infinite-scroll-component';
 import MovieList from './MovieList';
 import GenreFilter from './GenreFilter';
+import { throttle } from 'lodash';
 
 const API_KEY = '15f695c21470879249966ede084edc10';
 const START_YEAR = 2012;
-const MOVIES_PER_YEAR = 20; 
+const MOVIES_PER_YEAR = 20;
 
 const MovieData = () => {
   const [movies, setMovies] = useState([]);
@@ -18,10 +19,8 @@ const MovieData = () => {
 
   useEffect(() => {
     fetchMovies(START_YEAR); 
-    fetchGenres();
-  }, [hasMore]);
-
- 
+    fetchGenres(); 
+  }, []);
 
   const fetchMovies = async (year) => {
     try {
@@ -57,6 +56,8 @@ const MovieData = () => {
     }
   };
 
+  const throttledFetchMovies = throttle(fetchMovies, 1000);
+
   const fetchGenres = async () => {
     try {
       const response = await axios.get(`https://api.themoviedb.org/3/genre/movie/list`, {
@@ -82,10 +83,9 @@ const MovieData = () => {
           page: 1,
         }
       });
-      setMovies(response.data.results.slice(0, MOVIES_PER_YEAR)); 
+      setMovies(response.data.results.slice(0, MOVIES_PER_YEAR));
       setLoading(false);
       setLoadedYears({});
-       // Reset loaded years when changing genre
     } catch (error) {
       console.error('Error fetching movies by genre:', error);
       setLoading(false);
@@ -104,10 +104,9 @@ const MovieData = () => {
           page: 1,
         }
       });
-      console.log("response.data.results.slice(0, MOVIES_PER_YEAR)",response.data.results.slice(0, MOVIES_PER_YEAR));
-      setMovies(response.data.results.slice(0, MOVIES_PER_YEAR)); // Only get 20 movies for the start year
+      setMovies(response.data.results.slice(0, MOVIES_PER_YEAR)); 
       setLoading(false);
-      setLoadedYears({}); // Reset loaded years when clearing filter
+      setLoadedYears({}); 
     } catch (error) {
       console.error('Error fetching movies:', error);
       setLoading(false);
@@ -117,7 +116,7 @@ const MovieData = () => {
   const loadMoreMovies = () => {
     const nextYear = currentYear + 1;
     if (!loadedYears[nextYear]) {
-      fetchMovies(nextYear);
+      throttledFetchMovies(nextYear);
       setCurrentYear(nextYear);
     }
   };
@@ -129,12 +128,12 @@ const MovieData = () => {
         dataLength={movies.length}
         next={loadMoreMovies}
         hasMore={hasMore}
-        loader={<div className="loader"></div>}
+        loader={<div className="loader">Loading...</div>}
         scrollThreshold={0.9}
       >
         <MovieList movies={movies} />
       </InfiniteScroll>
-      {loading && <div className="loader"></div>}
+      {loading && <div className="loader">Loading...</div>}
     </div>
   );
 };
