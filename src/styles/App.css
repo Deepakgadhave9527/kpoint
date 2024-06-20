@@ -1,43 +1,13 @@
 
-.app {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  margin-top: 20px;
-}
 
 .genre-filter {
-  margin-bottom: 20px;
-}
-
-.genre-buttons {
-  display: flex;
-  flex-wrap: wrap;
-}
-
-.genre-button {
-  margin: 5px;
-  padding: 10px 15px;
-  background-color: #333;
-  color: white;
-  border: none;
-  border-radius: 5px;
-  cursor: pointer;
-  transition: background-color 0.3s;
-}
-
-.genre-button:hover {
-  background-color: #555;
+  padding: 1px;
+  background-color: #484848;
 }
 
 
-/* MovieList.css */
 
-.movie-list {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
-  gap: 20px;
-}
+
 
 .movie-item {
   background-color: #f0f0f0;
@@ -45,15 +15,8 @@
   border-radius: 5px;
 }
 
-/* GenreFilter.css */
-
-.genre-filter {
-  margin: 20px;
-}
-
-.genre-button.active {
-  background-color: red;
-  color: white;
+.MovieData{
+  margin-top: -10px;
 }
 
 
@@ -66,12 +29,15 @@
 
 .year-group {
   margin-bottom: 20px;
+  margin-left: 100px;
 }
 
 .year-heading {
-  font-size: 24px;
+  font-size: 25px;
   color: white;
-  margin-bottom: 10px;
+  margin-bottom: 0px;
+  margin-left: 10px;
+
 }
 
 .movies-in-year {
@@ -110,33 +76,6 @@
   margin: 5px 0;
 }
 
-@media (max-width: 768px) {
-  .movie {
-    max-width: 44%;
-  }
-  .movies-in-year {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: space-arround;
-  }
-  .movie-poster{
-    height: 200px;
-  }
-  .movie-title {
-    font-size: 16px;
-  }
-  .genre-filter{
-    width: 360px;
-    height: 143px;
-  }
-}
-
-.genre-filter {
-  margin-bottom: 20px;
-}
-
-
-
 .genre-buttons {
   display: flex;
   overflow-x: auto;
@@ -155,14 +94,9 @@
   transition: background-color 0.3s;
 }
 
-.genre-button.active {
-  background-color: red;
-}
+
 /* App.css */
 
-.genre-filter {
-  margin: 20px;
-}
 
 .red-heading {
   color: red;
@@ -172,10 +106,6 @@
   overflow-x: auto; /* Enable horizontal scrolling */
 }
 
-.genre-buttons {
-  display: flex;
-  flex-wrap: nowrap; /* Prevent wrapping items to the next line */
-}
 
 .genre-button {
   margin: 5px;
@@ -188,13 +118,56 @@
   transition: background-color 0.3s;
 }
 
-.genre-button:hover {
+/* .genre-button:hover {
   background-color: #555;
-}
+} */
 
 .genre-button.active {
   background-color: red;
+  color: white;
 }
 
+
+
+
+@media (max-width: 768px) {
+  .movie {
+    max-width: 44%;
+  }
+  .movies-in-year {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-arround;
+  }
+  .movie-poster{
+    height: 200px;
+  }
+  .movie-title {
+    font-size: 16px;
+  }
+
+  
+  .year-group{
+    margin-left: 0px;
+  }
+
+  .year-heading {
+    font-size: 24px;
+    color: white;
+    margin-bottom: 0px;
+    margin-left: 10px;}
+
+
+  .genre-buttons::-webkit-scrollbar {
+    display: none;
+}
+
+.genre-buttons{  
+  margin-left: -10px;
+
+  -ms-overflow-style:
+   none;  
+}
+}
 
 

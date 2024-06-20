@@ -128,12 +128,12 @@ const MovieData = () => {
         dataLength={movies.length}
         next={loadMoreMovies}
         hasMore={hasMore}
-        loader={<div className="loader">Loading...</div>}
+        loader={<div className="loader"></div>}
         scrollThreshold={0.9}
       >
         <MovieList movies={movies} />
       </InfiniteScroll>
-      {loading && <div className="loader">Loading...</div>}
+      {loading && <div className="loader"></div>}
     </div>
   );
 };

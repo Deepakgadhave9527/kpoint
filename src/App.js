@@ -1,8 +1,9 @@
+import { useReducer } from "react";
 import MovieData from "./components/MovieData";
 
 const App = () => {
-    return (<>
-    <MovieData/></>  );
+    return (
+    <MovieData/> );
 }
  
 export default App;
