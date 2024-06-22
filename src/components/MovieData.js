@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import axios from 'axios';
 import InfiniteScroll from 'react-infinite-scroll-component';
 import MovieList from './MovieList';
@@ -36,7 +36,7 @@ const MovieData = () => {
 
       const response = await axios.get(`https://api.themoviedb.org/3/discover/movie`, { params });
       const moviesForYear = response.data.results.slice(0, MOVIES_PER_YEAR);
-console.log(response);
+
       setMovies((prevMovies) => {
         const newMovies = [...prevMovies];
         moviesForYear.forEach((movie) => {
@@ -62,8 +62,8 @@ console.log(response);
       const response = await axios.get(`https://api.themoviedb.org/3/genre/movie/list`, {
         params: { api_key: API_KEY },
       });
-      const filteredGenres = response.data.genres.filter(genre => SELECTED_GENRES.includes("Action"));
-      setGenres(filteredGenres);
+      setGenres(response.data.genres);
+    
     } catch (error) {
       console.error('Error fetching genres:', error);
     }
@@ -80,7 +80,7 @@ console.log(response);
     fetchMovies(START_YEAR, activeGenre);
   }, [activeGenre]);
 
-  const throttledFetchMovies = throttle(fetchMovies, 1000);
+  const throttledFetchMovies = useMemo(() => throttle(fetchMovies, 1000), []);
 
   const handleGenreChange = (genreId) => {
     setActiveGenre(genreId);
@@ -105,12 +105,12 @@ console.log(response);
         dataLength={movies.length}
         next={loadMoreMovies}
         hasMore={hasMore}
-        loader={<div className="loader"></div>}
+        loader={<div className="loader">loader</div>}
         scrollThreshold={0.9}
       >
         <MovieList movies={movies} genresType={genres} />
       </InfiniteScroll>
-      {loading && <div className="loader"></div>}
+      {loading && <div className="loader">loader</div>}
     </div>
   );
 };

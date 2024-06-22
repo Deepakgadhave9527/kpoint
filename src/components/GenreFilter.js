@@ -1,6 +1,7 @@
-import React, { useState } from 'react';
+import React, { useState, memo } from 'react';
 
-const GenreFilter = ({ genres, onFilterChange, onClear }) => {
+const GenreFilter = memo(({ genres, onFilterChange, onClear }) => {
+  // console.log(genres);
   const [activeGenre, setActiveGenre] = useState(null);
 
   const filteredGenres = genres.filter(genre => (
@@ -45,6 +46,6 @@ const GenreFilter = ({ genres, onFilterChange, onClear }) => {
       </div>
     </div>
   );
-};
+});
 
 export default GenreFilter;

@@ -1,8 +1,9 @@
-import React from 'react';
+import React, { memo } from 'react';
 
 const IMAGE_BASE_URL = 'https://image.tmdb.org/t/p/w500';
 
-const MovieList = ({ movies, genresType }) => {
+const MovieList = memo(({ movies, genresType }) => {
+  console.log("genresType",genresType);
   const uniqueMovieIds = new Set();
 
   const belongsToFilteredGenres = (movie) => {
@@ -63,6 +64,6 @@ const MovieList = ({ movies, genresType }) => {
       ))}
     </div>
   );
-};
+});
 
 export default MovieList;
