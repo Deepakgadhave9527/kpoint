@@ -1,8 +1,19 @@
+button {
+  border: none;
+  outline: none;
+}
+* {
+  padding: 0;
+  box-sizing: border-box;
+}
+
+
 .genre-filter {
   padding: 1px;
   background-color: #484848;
+  position: fixed;
+  width: 100%;
 }
-
 .movie-item {
   background-color: #f0f0f0;
   padding: 10px;
@@ -23,6 +34,7 @@
 .year-group {
   margin-bottom: 20px;
   margin-left: 100px;
+  margin-top: 150px;
 }
 
 .year-heading {
@@ -39,7 +51,7 @@
 
 .movie {
   width: 100%;
-  max-width: 299px; 
+  max-width: 299px;
   margin: 10px;
   background: #333;
   border-radius: 8px;
@@ -83,7 +95,6 @@
   border: none;
   border-radius: 5px;
   cursor: pointer;
-  transition: background-color 0.3s;
 }
 
 .red-heading {
@@ -97,6 +108,30 @@
 .genre-button.active {
   background-color: red;
   color: white;
+}
+
+.loader {
+  border: 10px solid #f3f3f3;
+  border-radius: 50%;
+  border-top: 10px solid #425df5;
+  width: 100px;
+  height: 100px;
+  animation: spin 2s linear infinite;
+}
+
+@keyframes spin {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+.spinner-overlay {
+  position: fixed;
+  left: 41%;
+  top: 55%;
 }
 
 /* Media Queries */
@@ -116,7 +151,7 @@
     /* justify-content: space-around; */
   }
   .movie-poster {
-    height: 200px;
+    height: 250px;
   }
   .movie-title {
     font-size: 16px;
@@ -148,7 +183,7 @@
     margin: 1%;
   }
   .movie-poster {
-    height: 150px;
+    height: 250px;
   }
   .movie-title {
     font-size: 14px;
@@ -157,5 +192,3 @@
     font-size: 20px;
   }
 }
-
-

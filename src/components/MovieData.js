@@ -3,12 +3,12 @@ import axios from 'axios';
 import InfiniteScroll from 'react-infinite-scroll-component';
 import MovieList from './MovieList';
 import GenreFilter from './GenreFilter';
+import Spinner from './Spinner'; // Assuming you have a Spinner component
 import { throttle } from 'lodash';
 
 const API_KEY = '15f695c21470879249966ede084edc10';
 const START_YEAR = 2012;
 const MOVIES_PER_YEAR = 20;
-const SELECTED_GENRES = ['Action', 'Comedy', 'Horror', 'Drama', 'Science Fiction'];
 
 const MovieData = () => {
   const [movies, setMovies] = useState([]);
@@ -19,9 +19,13 @@ const MovieData = () => {
   const [hasMore, setHasMore] = useState(true);
   const [activeGenre, setActiveGenre] = useState(null);
 
+  // State to track whether data has been loaded for the current genre
+  const [dataLoadedForGenre, setDataLoadedForGenre] = useState(false);
+
   const fetchMovies = async (year, genreId) => {
     try {
       setLoading(true);
+
       const params = {
         api_key: API_KEY,
         sort_by: 'popularity.desc',
@@ -51,6 +55,9 @@ const MovieData = () => {
       setHasMore(year < new Date().getFullYear());
 
       setLoading(false);
+
+      setDataLoadedForGenre(true);
+
     } catch (error) {
       console.error('Error fetching movies:', error);
       setLoading(false);
@@ -77,7 +84,8 @@ const MovieData = () => {
     setMovies([]);
     setCurrentYear(START_YEAR);
     setLoadedYears({});
-    fetchMovies(START_YEAR, activeGenre);
+    setDataLoadedForGenre(false);
+      fetchMovies(START_YEAR, activeGenre);
   }, [activeGenre]);
 
   const throttledFetchMovies = useMemo(() => throttle(fetchMovies, 1000), []);
@@ -101,16 +109,15 @@ const MovieData = () => {
   return (
     <div className="MovieData">
       <GenreFilter genres={genres} onFilterChange={handleGenreChange} onClear={handleClearFilter} />
+      {loading && !dataLoadedForGenre && <Spinner />} {/* Show Spinner only when loading and data is not yet loaded for current genre */}
       <InfiniteScroll
         dataLength={movies.length}
         next={loadMoreMovies}
         hasMore={hasMore}
-        loader={<div className="loader"></div>}
         scrollThreshold={0.9}
       >
         <MovieList movies={movies} genresType={genres} />
       </InfiniteScroll>
-      {loading && <div className="loader"></div>}
     </div>
   );
 };

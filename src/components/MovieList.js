@@ -3,7 +3,7 @@ import React, { memo } from 'react';
 const IMAGE_BASE_URL = 'https://image.tmdb.org/t/p/w500';
 
 const MovieList = memo(({ movies, genresType }) => {
-  console.log("genresType",genresType);
+  console.log("genresType", genresType);
   const uniqueMovieIds = new Set();
 
   const belongsToFilteredGenres = (movie) => {
@@ -27,8 +27,8 @@ const MovieList = memo(({ movies, genresType }) => {
   }, {});
 
   Object.keys(moviesByYear).forEach((year) => {
-    moviesByYear[year].sort((a, b) => b.popularity-a.popularity);
-    
+    moviesByYear[year].sort((a, b) => b.vote_average - a.vote_average);
+
   });
 
   const sortedYears = Object.keys(moviesByYear).sort((a, b) => a - b);
@@ -48,14 +48,15 @@ const MovieList = memo(({ movies, genresType }) => {
                 <div className="movie-info">
                   <h3 className="movie-title">{movie.title}</h3>
                   <p className="movie-rating">Rating: {movie.vote_average}</p>
-                 <h3 className="movie-title">popularity:{movie.popularity}</h3>
-                  <p className="movie-genres">Genres: {movie.genre_ids.map(id => genresType.find(genre => genre.id === id).name).join(', ')}</p>
-                  <p className="movie-release-year">Release Year: {new Date(movie.release_date).getFullYear()}</p>
-                  <p className="movie-director">
+                  <p className="movie-release-year movie-rating">Release Year: {new Date(movie.release_date).getFullYear()}</p>
+
+                  <p className="movie-title movie-rating">popularity:{movie.popularity}</p>
+                  <p className="movie-genres movie-rating">Genres: {movie.genre_ids.map(id => genresType.find(genre => genre.id === id).name).join(', ')}</p>
+                  {/* <p className="movie-director">
                     Director: {movie.director}
                   </p><p className="movie-overview">
                     Description: {movie.overview}
-                  </p>
+                  </p> */}
                 </div>
               </div>
             ))}
