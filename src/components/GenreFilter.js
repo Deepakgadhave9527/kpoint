@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 
-const GenreFilter = ({ genres, onChange, onClear }) => {
+const GenreFilter = ({ genres, onFilterChange, onClear }) => {
   const [activeGenre, setActiveGenre] = useState(null);
 
   const filteredGenres = genres.filter(genre => (
@@ -13,12 +13,12 @@ const GenreFilter = ({ genres, onChange, onClear }) => {
 
   const handleGenreChange = (genreId) => {
     setActiveGenre(genreId);
-    onChange(genreId); 
+    onFilterChange(genreId);
   };
 
   const handleClearFilter = () => {
     setActiveGenre(null);
-    onClear();
+    onClear(); 
   };
 
   return (

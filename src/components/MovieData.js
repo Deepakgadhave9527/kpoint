@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import axios from 'axios';
 import InfiniteScroll from 'react-infinite-scroll-component';
 import MovieList from './MovieList';
@@ -8,6 +8,7 @@ import { throttle } from 'lodash';
 const API_KEY = '15f695c21470879249966ede084edc10';
 const START_YEAR = 2012;
 const MOVIES_PER_YEAR = 20;
+const SELECTED_GENRES = ['Action', 'Comedy', 'Horror', 'Drama', 'Science Fiction'];
 
 const MovieData = () => {
   const [movies, setMovies] = useState([]);
@@ -16,26 +17,26 @@ const MovieData = () => {
   const [currentYear, setCurrentYear] = useState(START_YEAR);
   const [loadedYears, setLoadedYears] = useState({});
   const [hasMore, setHasMore] = useState(true);
+  const [activeGenre, setActiveGenre] = useState(null);
 
-  useEffect(() => {
-    fetchMovies(START_YEAR); 
-    fetchGenres(); 
-  }, []);
-
-  const fetchMovies = async (year) => {
+  const fetchMovies = async (year, genreId) => {
     try {
       setLoading(true);
-      const response = await axios.get(`https://api.themoviedb.org/3/discover/movie`, {
-        params: {
-          api_key: API_KEY,
-          sort_by: 'popularity.desc',
-          primary_release_year: year,
-          'vote_count.gte': 100,
-          page: 1,
-        }
-      });
+      const params = {
+        api_key: API_KEY,
+        sort_by: 'popularity.desc',
+        primary_release_year: year,
+        'vote_count.gte': 100,
+        page: 1,
+      };
 
+      if (genreId) {
+        params['with_genres'] = genreId;
+      }
+
+      const response = await axios.get(`https://api.themoviedb.org/3/discover/movie`, { params });
       const moviesForYear = response.data.results.slice(0, MOVIES_PER_YEAR);
+console.log(response);
       setMovies((prevMovies) => {
         const newMovies = [...prevMovies];
         moviesForYear.forEach((movie) => {
@@ -45,85 +46,61 @@ const MovieData = () => {
         });
         return newMovies;
       });
-      setLoading(false);
 
       setLoadedYears((prevLoadedYears) => ({ ...prevLoadedYears, [year]: true }));
-      setHasMore(Object.keys(loadedYears).length < new Date().getFullYear() - START_YEAR + 1);
+      setHasMore(year < new Date().getFullYear());
 
+      setLoading(false);
     } catch (error) {
       console.error('Error fetching movies:', error);
       setLoading(false);
     }
   };
 
-  const throttledFetchMovies = throttle(fetchMovies, 1000);
-
   const fetchGenres = async () => {
     try {
       const response = await axios.get(`https://api.themoviedb.org/3/genre/movie/list`, {
-        params: {
-          api_key: API_KEY
-        }
+        params: { api_key: API_KEY },
       });
-      setGenres(response.data.genres);
+      const filteredGenres = response.data.genres.filter(genre => SELECTED_GENRES.includes("Action"));
+      setGenres(filteredGenres);
     } catch (error) {
       console.error('Error fetching genres:', error);
     }
   };
 
-  const handleGenreChange = async (genreId) => {
-    try {
-      setLoading(true);
-      const response = await axios.get(`https://api.themoviedb.org/3/discover/movie`, {
-        params: {
-          api_key: API_KEY,
-          sort_by: 'popularity.desc',
-          with_genres: genreId,
-          'vote_count.gte': 100,
-          page: 1,
-        }
-      });
-      setMovies(response.data.results.slice(0, MOVIES_PER_YEAR));
-      setLoading(false);
-      setLoadedYears({});
-    } catch (error) {
-      console.error('Error fetching movies by genre:', error);
-      setLoading(false);
-    }
+  useEffect(() => {
+    fetchGenres();
+  }, []);
+
+  useEffect(() => {
+    setMovies([]);
+    setCurrentYear(START_YEAR);
+    setLoadedYears({});
+    fetchMovies(START_YEAR, activeGenre);
+  }, [activeGenre]);
+
+  const throttledFetchMovies = throttle(fetchMovies, 1000);
+
+  const handleGenreChange = (genreId) => {
+    setActiveGenre(genreId);
   };
 
-  const handleClearFilter = async () => {
-    try {
-      setLoading(true);
-      const response = await axios.get(`https://api.themoviedb.org/3/discover/movie`, {
-        params: {
-          api_key: API_KEY,
-          sort_by: 'popularity.desc',
-          primary_release_year: START_YEAR,
-          'vote_count.gte': 100,
-          page: 1,
-        }
-      });
-      setMovies(response.data.results.slice(0, MOVIES_PER_YEAR)); 
-      setLoading(false);
-      setLoadedYears({}); 
-    } catch (error) {
-      console.error('Error fetching movies:', error);
-      setLoading(false);
-    }
+  const handleClearFilter = () => {
+    setActiveGenre(null);
   };
 
   const loadMoreMovies = () => {
     const nextYear = currentYear + 1;
     if (!loadedYears[nextYear]) {
-      throttledFetchMovies(nextYear);
+      throttledFetchMovies(nextYear, activeGenre);
       setCurrentYear(nextYear);
     }
   };
 
   return (
     <div className="MovieData">
-      <GenreFilter genres={genres} onChange={handleGenreChange} onClear={handleClearFilter} />
+      <GenreFilter genres={genres} onFilterChange={handleGenreChange} onClear={handleClearFilter} />
       <InfiniteScroll
         dataLength={movies.length}
         next={loadMoreMovies}
@@ -131,7 +108,7 @@ const MovieData = () => {
         loader={<div className="loader"></div>}
         scrollThreshold={0.9}
       >
-        <MovieList movies={movies} />
+        <MovieList movies={movies} genresType={genres} />
       </InfiniteScroll>
       {loading && <div className="loader"></div>}
     </div>

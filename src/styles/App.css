@@ -1,10 +1,7 @@
-
-
 .genre-filter {
   padding: 1px;
   background-color: #484848;
 }
-
 
 .movie-item {
   background-color: #f0f0f0;
@@ -12,10 +9,9 @@
   border-radius: 5px;
 }
 
-.MovieData{
+.MovieData {
   margin-top: -10px;
 }
-
 
 .movie-list {
   display: flex;
@@ -34,7 +30,6 @@
   color: white;
   margin-bottom: 0px;
   margin-left: 10px;
-
 }
 
 .movies-in-year {
@@ -91,10 +86,6 @@
   transition: background-color 0.3s;
 }
 
-
-/* App.css */
-
-
 .red-heading {
   color: red;
 }
@@ -103,29 +94,17 @@
   overflow-x: auto; /* Enable horizontal scrolling */
 }
 
-
-.genre-button {
-  margin: 5px;
-  padding: 10px 15px;
-  background-color: #333;
-  color: white;
-  border: none;
-  border-radius: 5px;
-  cursor: pointer;
-  transition: background-color 0.3s;
-}
-
-/* .genre-button:hover {
-  background-color: #555;
-} */
-
 .genre-button.active {
   background-color: red;
   color: white;
 }
 
-
-
+/* Media Queries */
+@media (max-width: 1024px) {
+  .year-group {
+    margin-left: 50px;
+  }
+}
 
 @media (max-width: 768px) {
   .movie {
@@ -134,37 +113,49 @@
   .movies-in-year {
     display: flex;
     flex-wrap: wrap;
-    justify-content: space-arround;
+    /* justify-content: space-around; */
   }
-  .movie-poster{
+  .movie-poster {
     height: 200px;
   }
   .movie-title {
     font-size: 16px;
   }
-
-  
-  .year-group{
+  .year-group {
     margin-left: 0px;
   }
-
   .year-heading {
     font-size: 24px;
     color: white;
     margin-bottom: 0px;
-    margin-left: 10px;}
-
-
+    margin-left: 10px;
+  }
   .genre-buttons::-webkit-scrollbar {
     display: none;
+  }
+  .genre-buttons {
+    -ms-overflow-style: none;
+    margin-left: -10px;
+  }
 }
 
-.genre-buttons{  
-  margin-left: -10px;
-
-  -ms-overflow-style:
-   none;  
-}
+@media (max-width: 480px) {
+  .movies-in-year {
+    /* justify-content: space-between; */
+  }
+  .movie {
+    max-width: 48%; /* Ensures two movies per row on mobile */
+    margin: 1%;
+  }
+  .movie-poster {
+    height: 150px;
+  }
+  .movie-title {
+    font-size: 14px;
+  }
+  .year-heading {
+    font-size: 20px;
+  }
 }
 
 
