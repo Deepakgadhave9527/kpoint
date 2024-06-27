@@ -3,8 +3,8 @@ import axios from 'axios';
 import InfiniteScroll from 'react-infinite-scroll-component';
 import MovieList from './MovieList';
 import GenreFilter from './GenreFilter';
-import Spinner from './Spinner'; // Assuming you have a Spinner component
-import { throttle } from 'lodash';
+import Spinner from './Spinner';
+import { debounce } from 'lodash';
 
 const API_KEY = '15f695c21470879249966ede084edc10';
 const START_YEAR = 2012;
@@ -19,7 +19,6 @@ const MovieData = () => {
   const [hasMore, setHasMore] = useState(true);
   const [activeGenre, setActiveGenre] = useState(null);
 
-  // State to track whether data has been loaded for the current genre
   const [dataLoadedForGenre, setDataLoadedForGenre] = useState(false);
 
   const fetchMovies = async (year, genreId) => {
@@ -57,7 +56,6 @@ const MovieData = () => {
       setLoading(false);
 
       setDataLoadedForGenre(true);
-
     } catch (error) {
       console.error('Error fetching movies:', error);
       setLoading(false);
@@ -70,7 +68,6 @@ const MovieData = () => {
         params: { api_key: API_KEY },
       });
       setGenres(response.data.genres);
-    
     } catch (error) {
       console.error('Error fetching genres:', error);
     }
@@ -85,10 +82,10 @@ const MovieData = () => {
     setCurrentYear(START_YEAR);
     setLoadedYears({});
     setDataLoadedForGenre(false);
-      fetchMovies(START_YEAR, activeGenre);
+    fetchMovies(START_YEAR, activeGenre);
   }, [activeGenre]);
 
-  const throttledFetchMovies = useMemo(() => throttle(fetchMovies, 1000), []);
+  const debouncedFetchMovies = useMemo(() => debounce(fetchMovies, 500), []);
 
   const handleGenreChange = (genreId) => {
     setActiveGenre(genreId);
@@ -101,7 +98,7 @@ const MovieData = () => {
   const loadMoreMovies = () => {
     const nextYear = currentYear + 1;
     if (!loadedYears[nextYear]) {
-      throttledFetchMovies(nextYear, activeGenre);
+      debouncedFetchMovies(nextYear, activeGenre);
       setCurrentYear(nextYear);
     }
   };
@@ -109,12 +106,12 @@ const MovieData = () => {
   return (
     <div className="MovieData">
       <GenreFilter genres={genres} onFilterChange={handleGenreChange} onClear={handleClearFilter} />
-      {loading && !dataLoadedForGenre && <Spinner />} {/* Show Spinner only when loading and data is not yet loaded for current genre */}
+      {loading && !dataLoadedForGenre && <Spinner />} 
       <InfiniteScroll
         dataLength={movies.length}
         next={loadMoreMovies}
         hasMore={hasMore}
-        scrollThreshold={0.9}
+        scrollThreshold={0.8}
       >
         <MovieList movies={movies} genresType={genres} />
       </InfiniteScroll>

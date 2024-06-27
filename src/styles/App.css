@@ -19,22 +19,23 @@ button {
   padding: 10px;
   border-radius: 5px;
 }
-
+/* 
 .MovieData {
   margin-top: -10px;
-}
+} */
 
 .movie-list {
   display: flex;
   flex-direction: column;
   background-color: black;
   color: white;
+  margin-top: 145px;
 }
 
 .year-group {
   margin-bottom: 20px;
   margin-left: 100px;
-  margin-top: 150px;
+  /* margin-top: 10px; */
 }
 
 .year-heading {
@@ -99,10 +100,11 @@ button {
 
 .red-heading {
   color: red;
+  margin-left: 5px;
 }
 
 .genre-buttons-container {
-  overflow-x: auto; /* Enable horizontal scrolling */
+  overflow-x: auto;
 }
 
 .genre-button.active {
@@ -134,16 +136,48 @@ button {
   top: 55%;
 }
 
-/* Media Queries */
+/* Media Queries
 @media (max-width: 1024px) {
   .year-group {
     margin-left: 50px;
   }
+  .movie {
+    max-width: 30%;
+  }
+} */
+
+
+@media (max-width: 1200px) {
+  .year-group {
+    margin-left: 80px;
+  }
+  .movie {
+    max-width: 16%;
+  }
+  .movie-title {
+    font-size: 17px;
+  }
 }
+
+@media (max-width: 992px) {
+  .year-group {
+    margin-left: 60px;
+  }
+  .movie {
+    max-width: 20%;
+  }
+  .movie-title {
+    font-size: 16px;
+  }
+  .movie-poster{
+    height: 270px;
+  }
+}
+
 
 @media (max-width: 768px) {
   .movie {
-    max-width: 44%;
+    max-width: 30%;
   }
   .movies-in-year {
     display: flex;
@@ -179,7 +213,7 @@ button {
     /* justify-content: space-between; */
   }
   .movie {
-    max-width: 48%; /* Ensures two movies per row on mobile */
+    max-width: 48%; 
     margin: 1%;
   }
   .movie-poster {
@@ -191,4 +225,16 @@ button {
   .year-heading {
     font-size: 20px;
   }
+
+  .genre-filter{
+    height: 130px;
+
+  }
+  .genre-buttons-container {
+    overflow-x: auto;
+    margin-top: -15px;
+}
+.movie-list{
+  margin-top: 130px;
+}
 }

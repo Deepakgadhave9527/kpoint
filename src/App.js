@@ -1,4 +1,3 @@
-import { useReducer } from "react";
 import MovieData from "./components/MovieData";
 
 const App = () => {
